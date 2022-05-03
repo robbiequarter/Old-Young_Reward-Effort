@@ -1,0 +1,5 @@
+*.asv
+*.Rproj.user
+*.Rhistory
+.Rproj.user
+*.tex
