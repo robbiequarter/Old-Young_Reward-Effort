@@ -66,50 +66,86 @@
     mutate(row=row_number()) %>%
     pivot_wider(., id_cols = c(row,ID,MASS), names_from = REWD, values_from = c("PEAKV", "RXNEX", "MVTDUR"))
   
+### Plot distribution of dependent variables
+  ggplot(R.exp, aes(x=VIG)) + 
+    geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
+                   color="black", fill="white") +
+    geom_density(alpha=.3, fill="#FF6666")  # Overlay with transparent density plot
+  
+  ggplot(R.exp, aes(x=RXNEX)) + 
+    geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
+                   colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")  # Overlay with transparent density plot
+  
+  ggplot(R.exp, aes(x=MVTDUR)) + 
+    geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
+                   colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")  # Overlay with transparent density plot
+  
+  ggplot(R.exp, aes(x=PEAKV)) + 
+    geom_histogram(aes(y=..density..),      # Histogram with density instead of count on y-axis
+                   colour="black", fill="white") +
+    geom_density(alpha=.2, fill="#FF6666")  # Overlay with transparent density plot
+  
+  
 ### Statistical Analyses for Reward-Effort experiment
   # Peak velocity
     # initial model
-    lmer.pv <- lmer(PEAKV ~ MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
-    summary(lmer.pv)
-    plot(lmer.pv)
-    plot_model(lmer.pv, type = "pred") # plot main effects with sjPlot
-    plot_model(lmer.pv, type = 'int') # plot interaction 
+    pv.lmer <- lmer(PEAKV ~ MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
+    summary(pv.lmer)
+    plot(pv.lmer)
+    plot_model(pv.lmer, type = "pred") # plot main effects with sjPlot
+    plot_model(pv.lmer, type = 'int') # plot interaction 
     
     # model 2
-    lmer.pv2 <- lmer(PEAKV ~ TRIAL*MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
-    summary(lmer.pv2)
+    pv.lmer2 <- lmer(PEAKV ~ TRIAL*MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
+    summary(pv.lmer2)
+    
+    #model 3
+    pv.lmer3 <- glmer(PEAKV ~ MASS*REWD + (1|ID), data = R.exp, family=Gamma(log))
+    summary(pv.lmer3)    
   
   # Reaction time
     # initial model
-    lmer.rxn <-  lmer(RXNEX ~ MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
-    summary(lmer.rxn)
-    plot_model(lmer.rxn)
+    rxn.lmer <-  lmer(RXNEX ~ MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
+    summary(rxn.lmer)
+    plot_model(rxn.lmer)
  
     # model 2
-    lmer.rxn2 <-  lmer(RXNEX ~ TRIAL*MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
-    summary(lmer.rxn2)     
+    rxn.lmer2 <-  lmer(RXNEX ~ TRIAL*MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
+    summary(rxn.lmer2)
+    
+    # model 3
+    rxn.lmer3 <- glmer(RXNEX ~ MASS*REWD + (1|ID), data = R.exp, family=Gamma(log))
+    summary(rxn.lmer3)   
     
   # Movement time
     # initial model
-    lmer.dur <-  lmer(MVTDUR ~ MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
-    summary(lmer.dur)
-    plot(lmer.dur)
+    dur.lmer <-  lmer(MVTDUR ~ MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
+    summary(dur.lmer)
+    plot(dur.lmer)
     
     # model 2
-    lmer.dur2 <-  lmer(MVTDUR ~ TRIAL*MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
-    summary(lmer.dur2)
+    dur.lmer2 <-  lmer(MVTDUR ~ TRIAL*MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
+    summary(dur.lmer2)
+    
+    # model 3
+    dur.lmer3 <- glmer(MVTDUR ~ MASS*REWD + (1|ID), data = R.exp, family=Gamma(log))
+    summary(dur.lmer3) 
     
   # Overall vigor
     # initial model
-    lmer.vig <-  lmer(VIG ~ MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
-    summary(lmer.vig)
-    plot(lmer.vig)
+    vig.lmer <-  lmer(VIG ~ MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
+    summary(vig.lmer)
+    plot(vig.lmer)
     
     # model 2
-    lmer.vig2 <-  lmer(VIG ~ TRIAL*MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
-    summary(lmer.vig2)  
+    vig.lmer2 <-  lmer(VIG ~ TRIAL*MASS*REWD + (1|ID), data = R.exp, REML = FALSE)
+    summary(vig.lmer2)  
    
-  
+    # model 3
+    vig.lmer3 <- glmer(VIG ~ MASS*REWD + (1|ID), data = R.exp, family=Gamma(log))
+    summary(vig.lmer3)   
   
   
   
