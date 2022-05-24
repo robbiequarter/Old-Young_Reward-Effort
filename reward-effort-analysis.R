@@ -3,7 +3,7 @@
 ### Import Libraries
   pacman::p_load(knitr, tidyverse, magrittr, kableExtra, GGally, 
                  car, lmerTest, lme4, rstatix, ggpubr, atable, cowplot, 
-                 sjPlot, glmmTMB)
+                 sjPlot, glmmTMB, DHARMa)
 
 ### Import and clean data
   rm(list=ls())
@@ -99,7 +99,7 @@
     plot_model(pv.lmer, type = 'int') # plot interaction 
     
     # model 2
-    pv.lmer2 <- lmer(PEAKV ~ MASS*REWD + MASS*sTRIAL + REWD*sTRIAL + (1|ID), data = R.exp, REML = FALSE)
+    pv.lmer2 <- lmer(PEAKV ~ MASS*REWD + MASS*TRIAL + REWD*TRIAL + (1|ID), data = R.exp, REML = FALSE)
     summary(pv.lmer2)
     
     #model 3
@@ -110,7 +110,7 @@
     plot_model(pv.lmer3, type = "re", vline.color="black")
     plot_model(pv.lmer3, type = "pred")
     
-    pv.lmer4 <- glmer(PEAKV ~ MASS*REWD + MASS*sTRIAL + REWD*sTRIAL + (1|ID), data = R.exp, family=Gamma(log))
+    pv.lmer4 <- glmer(PEAKV ~ MASS*REWD + MASS*TRIAL + REWD*TRIAL + (1|ID), data = R.exp, family=Gamma(log))
     summary(pv.lmer4)
   
   # Reaction time
@@ -119,7 +119,7 @@
     summary(rxn.lmer)
 
     # model 2
-    rxn.lmer2 <-  lmer(RXNEX ~ MASS*REWD + MASS*sTRIAL + REWD*sTRIAL + (1|ID), data = R.exp, REML = FALSE)
+    rxn.lmer2 <-  lmer(RXNEX ~ MASS*REWD + MASS*TRIAL + REWD*TRIAL + (1|ID), data = R.exp, REML = FALSE)
     summary(rxn.lmer2)
     
     # model 3
@@ -130,7 +130,7 @@
     plot_model(rxn.lmer3, type = "re", vline.color="black")
     plot_model(rxn.lmer3, type = "pred")
     
-    rxn.lmer4 <- glmer(RXNEX ~ MASS*REWD + MASS*sTRIAL + REWD*sTRIAL + (1|ID), data = R.exp, family=Gamma(log))
+    rxn.lmer4 <- glmer(RXNEX ~ MASS*REWD + MASS*TRIAL + REWD*TRIAL + (1|ID), data = R.exp, family=Gamma(log))
     summary(rxn.lmer4)
     
   # Movement time
@@ -139,7 +139,7 @@
     summary(dur.lmer)
 
     # model 2
-    dur.lmer2 <-  lmer(MVTDUR ~ MASS*REWD + MASS*sTRIAL + REWD*sTRIAL + (1|ID), data = R.exp, REML = FALSE)
+    dur.lmer2 <-  lmer(MVTDUR ~ MASS*REWD + MASS*TRIAL + REWD*TRIAL + (1|ID), data = R.exp, REML = FALSE)
     summary(dur.lmer2)
     
     # model 3
@@ -150,7 +150,7 @@
     plot_model(dur.lmer3, type = "re", vline.color="black")
     plot_model(dur.lmer3, type = "pred")
     
-    dur.lmer4 <- glmer(MVTDUR ~ MASS*REWD + MASS*sTRIAL + REWD*sTRIAL + (1|ID), data = R.exp, family=Gamma(log))
+    dur.lmer4 <- glmer(MVTDUR ~ MASS*REWD + MASS*TRIAL + REWD*TRIAL + (1|ID), data = R.exp, family=Gamma(log))
     summary(dur.lmer4)
     
   # Overall vigor
@@ -159,7 +159,7 @@
     summary(vig.lmer)
 
     # model 2
-    vig.lmer2 <-  lmer(VIG ~ MASS*REWD + MASS*sTRIAL + REWD*sTRIAL + (1|ID), data = R.exp, REML = FALSE)
+    vig.lmer2 <-  lmer(VIG ~ MASS*REWD + MASS*TRIAL + REWD*TRIAL + (1|ID), data = R.exp, REML = FALSE)
     summary(vig.lmer2)  
    
     # model 3
@@ -170,9 +170,13 @@
     plot_model(vig.lmer3, type = "re", vline.color="black")
     plot_model(vig.lmer3, type = "pred")
     
-    vig.lmer4 <- glmer(VIG ~ MASS*REWD + MASS*sTRIAL + REWD*sTRIAL + (1|ID), data = R.exp, family=Gamma(log))
+    vig.lmer4 <- glmer(VIG ~ MASS*REWD + MASS*TRIAL + REWD*TRIAL + (1|ID), data = R.exp, family=Gamma(log))
     summary(vig.lmer4)
   
-  
-  
+### To calculate standard error when combining RWD+Interaction standard errors, use:
+    # combined SE = sqrt( RWD*var(RWD) + Interaction*var(Interaction) + 2*RWD*Interaction*cov(RWD:Interaction) )
+    # combined SE = sqrt( 1*var(RWD) + 1*var(Interaction) + 2*1*1*var(RWD)*cov(RWD:Interaction) )
+    # combined SE = sqrt(vcov(lm.model)[3,3] + vcov(lm.model)[4,4] + (2*vcov(lm.model)[3,4]))
+    # source: https://www.statforbiology.com/2019/stat_general_errorpropagation/
+
   

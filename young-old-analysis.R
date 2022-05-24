@@ -66,7 +66,7 @@
     rxn.lmer <- lmer(Rxn ~ Reward*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
     summary(rxn.lmer)
   
-    rxn.lmer2 <- lmer(Rxn ~ Reward*Old + sTrial*Reward + sTrial*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
+    rxn.lmer2 <- lmer(Rxn ~ Reward*Old + Trial*Reward + Trial*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
     summary(rxn.lmer2)
     
     rxn.lmer3 <- glmer(Rxn ~ Reward*Old+ (1 | Subj), data=df, family = Gamma(log))
@@ -76,15 +76,16 @@
     plot_model(rxn.lmer3, type = "re", vline.color="black")
     #plot_model(rxn.lmer3, type = "pred")
   
-    rxn.lmer4 <- glmer(Rxn ~ Reward*Old + sTrial*Reward + sTrial*Old + (1 | Subj), data=df, family = Gamma(log))
-
+    rxn.lmer4 <- glmer(Rxn ~ Reward*Old + Trial*Reward + Trial*Old + (1 | Subj), data=df, family = Gamma(log))
+    summary(rxn.lmer4)
+    
   # Duration
     dur.lmer <- lmer(Duration ~ Reward*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
     summary(dur.lmer)
     
-    dur.lmer2 <- lmer(Duration ~ Reward*Old + sTrial*Reward + sTrial*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
+    dur.lmer2 <- lmer(Duration ~ Reward*Old + Trial*Reward + Trial*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
     summary(dur.lmer2)
-    
+
     dur.lmer3 <- glmer(Duration ~ Reward*Old + (1 | Subj), data=df, family = Gamma(log))
     summary(dur.lmer3)
     plot_model(dur.lmer3, vline.color = "black")
@@ -92,14 +93,14 @@
     plot_model(dur.lmer3, type = "re", vline.color="black")
     plot_model(dur.lmer3, type = "pred")
     
-    dur.lmer4 <- glmer(Duration ~ Reward*Old + sTrial*Reward + sTrial*Old + (1 | Subj), data=df, family = Gamma(log))
+    dur.lmer4 <- glmer(Duration ~ Reward*Old + Trial*Reward + Trial*Old + (1 | Subj), data=df, family = Gamma(log))
     summary(dur.lmer4)
     
   # Peak velocity
     pv.lmer <- lmer(PeakV ~ Reward*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
     summary(pv.lmer)
     
-    pv.lmer2 <- lmer(PeakV ~ Reward*Old + sTrial*Reward + sTrial*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
+    pv.lmer2 <- lmer(PeakV ~ Reward*Old + Trial*Reward + Trial*Old + (1 | Subj), data=df, REML=FALSE, na.action=na.omit)
     summary(pv.lmer2)
     
     pv.lmer3 <- glmer(PeakV ~ Reward*Old + (1 | Subj), data=df, family = Gamma(log))
@@ -109,6 +110,11 @@
     plot_model(pv.lmer3, type = "re", vline.color="black")
     plot_model(pv.lmer3, type = "pred")
     
-    pv.lmer4 <- glmer(PeakV ~ Reward*Old + sTrial*Reward + sTrial*Old + (1 | Subj), data=df, family = Gamma(log))
+    pv.lmer4 <- glmer(PeakV ~ Reward*Old + Trial*Reward + Trial*Old + (1 | Subj), data=df, family = Gamma(log))
 
+### To calculate standard error when combining RWD+Interaction standard errors of model coefficients, use:
+    # combined SE = sqrt( RWD*var(RWD) + Interaction*var(Interaction) + 2*RWD*Interaction*cov(RWD:Interaction) )
+    # combined SE = sqrt( 1*var(RWD) + 1*var(Interaction) + 2*1*1*var(RWD)*cov(RWD:Interaction) )
+    # combined SE = sqrt(vcov(lm.model)[3,3] + vcov(lm.model)[4,4] + (2*vcov(lm.model)[3,4]))
+    # source: https://www.statforbiology.com/2019/stat_general_errorpropagation/
   
